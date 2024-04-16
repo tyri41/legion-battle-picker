@@ -1,10 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
+import { ThemeProvider } from "@material-tailwind/react";
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "./router";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <App />
+        <ThemeProvider>
+            <RouterProvider router={router} />
+        </ThemeProvider>
     </React.StrictMode>
 );
