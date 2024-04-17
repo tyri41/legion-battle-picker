@@ -23,4 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-scripts
+scripts/images
+scripts/key.json
+local
