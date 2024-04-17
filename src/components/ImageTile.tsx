@@ -4,11 +4,13 @@ import { useImage } from "../db/useImage";
 
 export type ImageTileProps = {
     grayed?: boolean;
+    onClick?: (src?: string) => void;
 } & ComponentProps<"div">;
 
 export const ImageTile: FC<ImageTileProps> = ({
     grayed = false,
     className,
+    onClick = () => {},
     ...props
 }) => {
     const src = useImage("objective/Breakthrough.jpeg");
@@ -19,6 +21,7 @@ export const ImageTile: FC<ImageTileProps> = ({
                 grayed ? "grayscale" : "",
                 className
             )}
+            onClick={() => onClick(src)}
             {...props}
         >
             <img

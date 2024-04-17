@@ -1,4 +1,4 @@
-import { ImageTile } from "./ImageTile";
+import { ImageTile } from "../../components/ImageTile";
 
 export const PickingSection = () => {
     return (

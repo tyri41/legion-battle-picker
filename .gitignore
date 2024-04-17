@@ -26,3 +26,4 @@ dist-ssr
 scripts/images
 scripts/key.json
 local
+src/firebaseConfig.json

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PickingSection } from "../components/PickingSection";
+import { PickingSection } from "../containers/picker/PickingSection";
+import { PickerDialog } from "../containers/picker/PickerDialog";
 
 export const Route = createFileRoute("/picker")({
     component: Picker,
@@ -27,6 +28,7 @@ function Picker() {
     return (
         <div className="p-3 flex flex-wrap">
             <PickingSection />
+            <PickerDialog />
         </div>
     );
 }
