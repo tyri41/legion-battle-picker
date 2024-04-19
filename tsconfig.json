@@ -24,8 +24,8 @@
   },
   "include": [
     "src",
-    "scripts",
-    "local/downloadImages.ts"
+    // "scripts",
+    // "local/downloadImages.ts"
   ],
   "references": [
     {
