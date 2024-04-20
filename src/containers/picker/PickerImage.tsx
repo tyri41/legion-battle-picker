@@ -8,10 +8,16 @@ export type PickerImageProps = {
     onClick?: (src?: string) => void;
 } & Omit<ComponentProps<"div">, "onClick">;
 
+const borderColors = {
+    red: "border-red-500",
+    blue: "border-blue-500",
+    green: "border-green-500",
+} as const;
+
 const useImageStyles = (nr: number) => {
     const { currentPlayer, vetoes, finished } =
         useContext(PickerSectionContext);
-    const border = `border-4 border-${finished ? "green" : currentPlayer}-500`;
+    const border = `border-4 ${borderColors[finished ? "green" : currentPlayer]}`;
     const imageBorder = vetoes === nr ? border : "";
     const grayscale =
         (finished && vetoes !== nr) || nr < vetoes ? "grayscale" : "";

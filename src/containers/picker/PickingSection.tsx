@@ -3,11 +3,11 @@ import { CardData, CardType } from "../../types";
 import { PickerContext, PickerSectionContext } from "./pickerContext";
 import { filter, map, take } from "remeda";
 import { useDatabaseCollectionObject } from "../../db/useDatabaseCollectionObject";
-import { Button } from "flowbite-react";
 import { Icons } from "../../components/Icons";
 import { cn } from "@/lib/utils";
 import { PickerDialog } from "./PickerDialog";
 import { PickerImage } from "./PickerImage";
+import { Button } from "@/components/ui/button";
 
 const PickingSectionContent: FC<{
     category: CardType;
@@ -18,14 +18,16 @@ const PickingSectionContent: FC<{
     const [modalSrc, setModalSrc] = useState<string>();
 
     return (
-        <div className="w-full flex flex-row">
+        <div className="w-full flex flex-row h-full">
             <Button
                 className={cn(
-                    "my-4",
+                    "my-4 mr-2 min-h-full",
                     currentPlayer === "blue" ? "bg-blue-500" : "bg-red-500"
                 )}
                 disabled={finished || vetoes >= 3}
                 onClick={addVeto}
+                size="vertical"
+                variant="colored"
             >
                 <div className="flex flex-col justify-center h-full">
                     <Icons.stop className="w-8" />
