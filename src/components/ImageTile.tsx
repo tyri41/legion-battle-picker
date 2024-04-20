@@ -1,49 +1,36 @@
-import { ComponentProps, FC, useContext } from "react";
-import { cn } from "../lib/cn";
+import { ComponentProps, FC } from "react";
+import { cn } from "@/lib/utils";
 import { useImage } from "../db/useImage";
-import { PickerSectionContext } from "../containers/picker/pickerContext";
+import defaultPlaceholder from "../assets/condition_back.jpg";
 
 export type ImageTileProps = {
     src?: string;
-    nr: number;
-    onClick?: (src?: string) => void;
-} & Omit<ComponentProps<"div">, "onClick">;
-
-const useImageStyles = (nr: number) => {
-    const { currentPlayer, vetoes, finished } =
-        useContext(PickerSectionContext);
-    const border = `border-4 border-${finished ? "green" : currentPlayer}-500`;
-    const imageBorder = vetoes === nr ? border : "";
-    const grayscale =
-        (finished && vetoes !== nr) || nr < vetoes ? "grayscale" : "";
-
-    return {
-        grayscale,
-        imageBorder,
-    };
-};
+    imageStyle?: string;
+    wrapperStyle?: string;
+    placeholder?: string;
+} & ComponentProps<"div">;
 
 export const ImageTile: FC<ImageTileProps> = ({
-    nr,
     src: imageURL,
-    className,
+    imageStyle = "",
+    wrapperStyle = "",
+    placeholder = defaultPlaceholder,
     onClick = () => {},
     ...props
 }) => {
-    const src = useImage(imageURL);
-    const { grayscale, imageBorder } = useImageStyles(nr);
+    const src = useImage(imageURL) ?? placeholder;
 
     return (
         <div
-            className={cn("flex p-2 cursor-pointer", grayscale, className)}
-            onClick={() => onClick(src)}
+            className={cn("flex p-2 cursor-pointer", wrapperStyle)}
+            onClick={onClick}
             {...props}
         >
             <img
                 src={src}
                 className={cn(
                     "rounded-md md:rounded-xl lg:rounded-3xl transition duration-200 delay-150 ease-out hover:scale-110 object-scale-down",
-                    imageBorder
+                    imageStyle
                 )}
             ></img>
         </div>

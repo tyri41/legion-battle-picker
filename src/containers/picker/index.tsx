@@ -1,9 +1,9 @@
-import { Button } from "flowbite-react";
 import { PickerContext, VetoType, Player } from "./pickerContext";
 import { PickingSection } from "./PickingSection";
 import { useState } from "react";
 import { dropLast } from "remeda";
-import { cn } from "../../lib/cn";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const value = {
     vetoes: [],
@@ -45,6 +45,7 @@ export const Picker = () => {
                     )}
                     onClick={() => addVeto("pass")}
                     disabled={vetoes.length >= 4}
+                    variant="colored"
                 >
                     Pass
                 </Button>
@@ -63,10 +64,18 @@ export const Picker = () => {
             </PickerContext.Provider>
 
             <div className="flex flex-row gap-2 justify-center">
-                <Button className="w-[100px]" onClick={dropVeto}>
+                <Button
+                    className="w-[100px]"
+                    onClick={dropVeto}
+                    variant="secondary"
+                >
                     Undo
                 </Button>
-                <Button className="w-[100px]" onClick={resetVeto}>
+                <Button
+                    className="w-[100px]"
+                    onClick={resetVeto}
+                    variant="secondary"
+                >
                     Reset
                 </Button>
             </div>

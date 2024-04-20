@@ -4,7 +4,7 @@ import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 export const Route = createRootRoute({
     component: () => (
         <>
-            <div className="h-full w-full">
+            <div className="h-full w-full overflow-auto fancy-bg">
                 <div className="p-2 flex gap-2">
                     <Link to="/builder" className="[&.active]:font-bold">
                         Home

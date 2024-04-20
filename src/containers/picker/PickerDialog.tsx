@@ -1,7 +1,6 @@
-import { Modal } from "flowbite-react";
 import { isNonNullish } from "remeda";
 import { useImage } from "../../db/useImage";
-import { Icons } from "../../components/Icons";
+import { Dialog, DialogBareContent } from "@/components/ui/dialog";
 
 export const PickerDialog = ({
     onReject,
@@ -11,23 +10,19 @@ export const PickerDialog = ({
     image: string | undefined;
 }) => {
     const src = useImage(image);
+    const onOpenChange = (open: boolean) => {
+        if (!open) {
+            onReject();
+        }
+    };
 
     return (
         <>
-            <Modal
-                dismissible
-                show={isNonNullish(src)}
-                onClose={onReject}
-                className="[&_div]:rounded-3xl [&_div]:outline-none"
-            >
-                <img src={src} className="rounded-3xl"></img>
-                <div
-                    className=" absolute right-2 top-2 cursor-pointer"
-                    onClick={onReject}
-                >
-                    <Icons.xCircle className="w-5 sm:w-7 md:w-10" />
-                </div>
-            </Modal>
+            <Dialog open={isNonNullish(src)} onOpenChange={onOpenChange}>
+                <DialogBareContent>
+                    <img src={src} className="rounded-3xl"></img>
+                </DialogBareContent>
+            </Dialog>
         </>
     );
 };
