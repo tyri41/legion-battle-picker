@@ -1,13 +1,13 @@
 import { FC, useContext, useState } from "react";
-import { ImageTile } from "../../components/ImageTile";
 import { CardData, CardType } from "../../types";
 import { PickerContext, PickerSectionContext } from "./pickerContext";
 import { filter, map, take } from "remeda";
 import { useDatabaseCollectionObject } from "../../db/useDatabaseCollectionObject";
 import { Button } from "flowbite-react";
 import { Icons } from "../../components/Icons";
-import { cn } from "../../lib/cn";
+import { cn } from "@/lib/utils";
 import { PickerDialog } from "./PickerDialog";
+import { PickerImage } from "./PickerImage";
 
 const PickingSectionContent: FC<{
     category: CardType;
@@ -34,7 +34,7 @@ const PickingSectionContent: FC<{
             </Button>
             <div className="grid grid-cols-4 gap-2 p-2">
                 {take(cards, 4).map((card, i) => (
-                    <ImageTile
+                    <PickerImage
                         key={card?.imageUrl ?? i}
                         nr={i}
                         src={

@@ -3,7 +3,7 @@ import { PickerContext, VetoType, Player } from "./pickerContext";
 import { PickingSection } from "./PickingSection";
 import { useState } from "react";
 import { dropLast } from "remeda";
-import { cn } from "../../lib/cn";
+import { cn } from "@/lib/utils";
 
 const value = {
     vetoes: [],
