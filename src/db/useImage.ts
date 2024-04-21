@@ -6,7 +6,6 @@ export const useImage = (path: string | undefined) => {
     const [url, setUrl] = useState<string>();
     useEffect(() => {
         if (isNonNullish(path)) {
-            console.log(path);
             const imageRef = ref(getStorage(), path);
             getDownloadURL(imageRef).then(setUrl);
         } else {

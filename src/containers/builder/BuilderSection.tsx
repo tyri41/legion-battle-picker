@@ -3,17 +3,21 @@ import { PickBar } from "../../components/PickBar";
 import { CardData, CardType } from "../../types";
 import { useFormContext } from "react-hook-form";
 import { BuilderForm } from ".";
-import { filter, isNonNullish, map, pipe } from "remeda";
+import { filter, isIncludedIn, isNonNullish, map, pipe, values } from "remeda";
 import { useDatabaseCollectionObject } from "../../db/useDatabaseCollectionObject";
-import { Accordion } from "flowbite-react";
+import {
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ImageTile } from "@/components/ImageTile";
+import { cn } from "@/lib/utils";
 
-const items = [
-    { key: "B", label: "Breakthrough" },
-    { key: "KK", label: "Key Positions" },
-];
+const CARD_LIMIT = 4;
 
 export const BuilderSection: FC<{ category: CardType }> = ({ category }) => {
-    const allCards = useDatabaseCollectionObject<CardData>([category]);
+    const allCardsDict = useDatabaseCollectionObject<CardData>([category]);
+    const allCards = values(allCardsDict);
 
     const { setValue, getValues, watch } = useFormContext<BuilderForm>();
     const removeCard = (key: string) => {
@@ -23,22 +27,61 @@ export const BuilderSection: FC<{ category: CardType }> = ({ category }) => {
             filter(oldCards, (cardKey) => cardKey !== key)
         );
     };
+    const addCard = (key: string) => {
+        const oldCards = getValues(category);
+        setValue(category, [...oldCards, key]);
+    };
     const cardKeys = watch(category);
-    // const items = pipe(cardKeys,
-    //     map((key) => allCards[key]),
-    //     filter(isNonNullish),
-    //     map(({ id, label }) => ({ key: id, label }))
-    // )
+    const items = pipe(
+        cardKeys,
+        map((key) => allCardsDict[key]),
+        filter(isNonNullish),
+        map(({ id, label }) => ({ key: id, label }))
+    );
+    const unpickedCards = filter(
+        allCards,
+        ({ id }) => !isIncludedIn(id, cardKeys)
+    );
+    const pickedCardsCount = cardKeys.length;
+    const indicatorColor =
+        pickedCardsCount !== CARD_LIMIT ? "text-red-300" : "text-green-300";
 
     return (
         <>
-            <Accordion.Title className=" bg-gray-500 focus:bg-gray-500 hover:bg-gray-400 text-gray-100">
-                <p className="capitalize">{category}</p>
-            </Accordion.Title>
-            <Accordion.Content className=" bg-gray-500 focus:bg-gray-500">
-                <PickBar items={items} onClick={removeCard} />
-                <div>hi</div>
-            </Accordion.Content>
+            <AccordionItem value={category} className="border-gray-400">
+                <AccordionTrigger>
+                    <div className="flex flex-row gap-4 justify-start items-baseline w-full pr-4">
+                        <p className="capitalize justify-start text-left w-[100px]">
+                            {category}
+                        </p>
+                        <div className=" italic flex flex-row gap-2 text-sm hidable">
+                            {map(items, ({ label }) => (
+                                <p>{label}</p>
+                            ))}
+                        </div>
+                        <div
+                            className={cn(
+                                "flex flex-row grow justify-end",
+                                indicatorColor
+                            )}
+                        >{`${pickedCardsCount} / 4`}</div>
+                    </div>
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-6 items-center w-full">
+                    <PickBar items={items} onClick={removeCard} />
+                    <div className="flex flex-wrap gap-3">
+                        {map(unpickedCards, ({ imageUrl, id }) => (
+                            <ImageTile
+                                key={id}
+                                src={`${category}/${imageUrl}`}
+                                onClick={() =>
+                                    pickedCardsCount < CARD_LIMIT && addCard(id)
+                                }
+                            />
+                        ))}
+                    </div>
+                </AccordionContent>
+            </AccordionItem>
         </>
     );
 };

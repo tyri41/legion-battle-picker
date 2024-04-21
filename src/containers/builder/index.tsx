@@ -1,43 +1,64 @@
 import { CardType } from "../../types";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { BuilderSection } from "./BuilderSection";
-// import { Accordion } from "flowbite-react";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 
 export type BuilderForm = { [category in CardType]: string[] };
 
 export const Builder = () => {
-    const methods = useForm<BuilderForm>();
+    const methods = useForm<BuilderForm>({
+        defaultValues: {
+            objective: [],
+            condition: [],
+            deployment: [],
+        },
+    });
     return (
-        <div>
+        <div className="p-2 md:px-6 flex justify-center w-full">
             <FormProvider {...methods}>
-                {/* <Accordion className="border-none m-5 rounded-lg">
-                    <Accordion.Panel>
+                <div className="w-full flex flex-col gap-2">
+                    <Accordion
+                        type="single"
+                        collapsible
+                        className="bg-gray-700 max-w-[1500px] w-full p-4 rounded-3xl"
+                    >
                         <BuilderSection category="objective" />
-                    </Accordion.Panel>
-                    <Accordion.Panel className="border-none">
-                        <Accordion.Title className=" bg-gray-500 focus:bg-gray-500 hover:bg-gray-400 text-gray-100">
-                            dasdasda
-                        </Accordion.Title>
-                        <Accordion.Content className="bg-gray-500">
-                            saaaaaaaaaaaaaaaaaaaaaaaaaaa
-                        </Accordion.Content>
-                    </Accordion.Panel>
-                </Accordion> */}
-                <Accordion type="single" collapsible className="m-5">
-                    <AccordionItem value="item-1">
-                        <AccordionTrigger>Is it accessible?</AccordionTrigger>
-                        <AccordionContent>
-                            Yes. It adheres to the WAI-ARIA design pattern.
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion>
+                        <BuilderSection category="deployment" />
+                        <BuilderSection category="condition" />
+                    </Accordion>
+                    <div className="flex w-full justify-center">
+                        <SubmitButton />
+                    </div>
+                </div>
             </FormProvider>
         </div>
+    );
+};
+
+const SubmitButton = () => {
+    const { watch } = useFormContext<BuilderForm>();
+    const data = watch();
+    const { condition, objective, deployment } = data;
+    const isValid = [condition, objective, deployment].every(
+        (list) => list.length === 4
+    );
+
+    return (
+        <Link
+            disabled={!isValid}
+            to="/picker"
+            search={data}
+            className="max-w-[200px] w-full"
+        >
+            <Button
+                disabled={!isValid}
+                type="submit"
+                className="max-w-[200px] w-full"
+            >
+                Confirm
+            </Button>
+        </Link>
     );
 };
