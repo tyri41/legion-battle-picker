@@ -1,22 +1,20 @@
 import { PickerContext, VetoType, Player } from "./pickerContext";
 import { PickingSection } from "./PickingSection";
 import { useState } from "react";
-import { dropLast } from "remeda";
+import { dropLast, mapValues, shuffle } from "remeda";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
-const value = {
-    vetoes: [],
-    collections: {
-        objective: ["B", "BR", "HE", "ItT"],
-        deployment: ["AP", "BL", "D", "DC"],
-        condition: ["CC", "FP", "HE", "LV"],
-    },
-    currentPlayer: "blue",
-};
+import { Link, useSearch } from "@tanstack/react-router";
 
 export const Picker = () => {
-    const collections = value.collections;
+    const searchParams = useSearch({ from: "/picker" });
+    const [collections, setCollection] = useState(
+        mapValues(searchParams, (value) => shuffle(value))
+    );
+    const shuffleCollections = () => {
+        setCollection(mapValues(searchParams, (value) => shuffle(value)));
+    };
+
     const [vetoes, setVetoes] = useState<VetoType[]>([]);
     const [currentPlayer, setCurrentPlayer] = useState<Player>("blue");
     const togglePlayer = () =>
@@ -37,10 +35,10 @@ export const Picker = () => {
 
     return (
         <div className="flex flex-col p-2">
-            <div className="flex grow justify-center">
+            <div className="flex grow justify-center gap-2">
                 <Button
                     className={cn(
-                        "max-w-[400px] w-full",
+                        "max-w-[400px] w-full mr-4",
                         currentPlayer === "blue" ? "bg-blue-500" : "bg-red-500"
                     )}
                     onClick={() => addVeto("pass")}
@@ -48,6 +46,20 @@ export const Picker = () => {
                     variant="colored"
                 >
                     Pass
+                </Button>
+                <Button
+                    className="w-[100px]"
+                    onClick={dropVeto}
+                    variant="secondary"
+                >
+                    Undo
+                </Button>
+                <Button
+                    className="w-[100px]"
+                    onClick={resetVeto}
+                    variant="secondary"
+                >
+                    Reset
                 </Button>
             </div>
             <PickerContext.Provider
@@ -65,18 +77,21 @@ export const Picker = () => {
 
             <div className="flex flex-row gap-2 justify-center">
                 <Button
-                    className="w-[100px]"
-                    onClick={dropVeto}
+                    className="w-[150px]"
+                    onClick={shuffleCollections}
                     variant="secondary"
                 >
-                    Undo
+                    Reshuffle
                 </Button>
                 <Button
-                    className="w-[100px]"
+                    className="w-[150px]"
+                    asChild
                     onClick={resetVeto}
                     variant="secondary"
                 >
-                    Reset
+                    <Link to="/builder" search={searchParams}>
+                        Return to builder
+                    </Link>
                 </Button>
             </div>
         </div>

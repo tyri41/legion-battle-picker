@@ -56,7 +56,7 @@ export const BuilderSection: FC<{ category: CardType }> = ({ category }) => {
                         </p>
                         <div className=" italic flex flex-row gap-2 text-sm hidable">
                             {map(items, ({ label }) => (
-                                <p>{label}</p>
+                                <p key={label}>{label}</p>
                             ))}
                         </div>
                         <div

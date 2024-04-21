@@ -3,20 +3,17 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { BuilderSection } from "./BuilderSection";
 import { Accordion } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 
 export type BuilderForm = { [category in CardType]: string[] };
 
 export const Builder = () => {
+    const searchParams = useSearch({ from: "/builder" });
     const methods = useForm<BuilderForm>({
-        defaultValues: {
-            objective: [],
-            condition: [],
-            deployment: [],
-        },
+        defaultValues: searchParams,
     });
     return (
-        <div className="p-2 md:px-6 flex justify-center w-full">
+        <div className="p-2 md:px-6 md:pt-6 flex justify-center w-full">
             <FormProvider {...methods}>
                 <div className="w-full flex flex-col gap-2">
                     <Accordion
@@ -24,6 +21,7 @@ export const Builder = () => {
                         collapsible
                         className="bg-gray-700 max-w-[1500px] w-full p-4 rounded-3xl"
                     >
+                        <div className="border-b border-gray-400" />
                         <BuilderSection category="objective" />
                         <BuilderSection category="deployment" />
                         <BuilderSection category="condition" />
